@@ -12,7 +12,13 @@ export class HTTPServer {
         this.wsServer = new WebSocketServerClass(this.server);
 
         this.server.listen(port, () => {
-            console.log(`Start static http server on the ${port} port!`)  
+            const addressInfo = this.server.address();
+            console.log(`HTTP server has started on the ${port} port!`) 
+            if (typeof addressInfo === 'string') {
+                console.log(`WebSocket server has been started on: ${addressInfo}`);
+              } else if (addressInfo) {
+                console.log(`WebSocket server has been started on: ${addressInfo.address === "::" ? 'localhost' : addressInfo.address}:${addressInfo.port}`);
+              }
         });
 
         process.on('SIGINT', () => {

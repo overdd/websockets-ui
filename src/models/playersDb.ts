@@ -1,27 +1,40 @@
 import { Player } from './player';
 
 export class PlayersDB {
-    private players: Map<string, Player>;
+    private players: Player[];
 
     constructor() {
-        this.players = new Map<string, Player>();
+        this.players = [];
     }
 
     addPlayer(name: string, password: string): Player | null {
-        if (this.players.has(name)) {
+        const existingPlayer = this.players.find(player => player.name === name);
+        if (existingPlayer) {
             return null;
         }
-        const player = new Player(name, password);
-        this.players.set(name, player);
-        return player;
+        const newPlayer = new Player(name, password);
+        this.players.push(newPlayer);
+        return newPlayer;
     }
 
     getPlayer(name: string): Player | undefined {
-        return this.players.get(name);
+        return this.players.find(player => player.name === name);
     }
 
     validatePlayer(name: string, password: string): boolean {
-        const player = this.players.get(name);
+        const player = this.getPlayer(name);
         return player !== undefined && player.password === password;
+    }
+
+    getPlayerIndex(name: string): number {
+        return this.players.findIndex(player => player.name === name);
+    }
+
+    updatePlayer(player: Player): void {
+        if (this.players[player.name]) {
+            this.players[player.name] = player;
+        } else {
+            console.error(`Player ${player.name} not found in database.`);
+        }
     }
 }

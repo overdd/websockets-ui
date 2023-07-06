@@ -11,7 +11,6 @@ export class WebSocketServerClass {
         this.wsServer = new WebSocketServer({ server: server });
         this.connectionHandler = this.connectionHandler.bind(this);
         this.wsServer.on('connection', this.connectionHandler);
-        console.log(`WebSocket server started!`);
     }
 
     private connectionHandler(ws: WebSocket, req: IncomingMessage) {
@@ -20,6 +19,9 @@ export class WebSocketServerClass {
             switch (req.type) {
               case 'reg':
                 this.playerController.registerPlayer(ws, req);
+                break;
+            case 'update_winners':
+                this.playerController.updateWins(ws, req);
                 break;
               default:
                 ws.send(JSON.stringify({ error: true, errorText: 'Unknown request type' }));
