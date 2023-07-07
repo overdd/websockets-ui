@@ -1,4 +1,4 @@
-import { Player } from './player';
+import { Player } from '../models/player';
 
 export class PlayersDB {
     private players: Player[];
@@ -31,10 +31,16 @@ export class PlayersDB {
     }
 
     updatePlayer(player: Player): void {
+        console.log(`Trying to update ${this.players[player.name]}.`)
         if (this.players[player.name]) {
             this.players[player.name] = player;
+            console.log(`${this.players[player.name]} updated successfully!`)
         } else {
             console.error(`Player ${player.name} not found in database.`);
         }
+    }
+
+    getNextAvailableIndex(): number {
+        return this.players.length - 1;
     }
 }

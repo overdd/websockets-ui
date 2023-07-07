@@ -17,7 +17,7 @@ export class HTTPServer {
             if (typeof addressInfo === 'string') {
                 console.log(`WebSocket server has been started on: ${addressInfo}`);
               } else if (addressInfo) {
-                console.log(`WebSocket server has been started on: ${addressInfo.address === "::" ? 'localhost' : addressInfo.address}:${addressInfo.port}`);
+                console.log(`WebSocket server has been started on: ${addressInfo.address === "::" ? 'localhost' : addressInfo.address}:${process.env.WS_PORT}`);
               }
         });
 

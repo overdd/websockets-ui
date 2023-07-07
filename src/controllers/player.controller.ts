@@ -1,5 +1,5 @@
 import { WebSocket } from 'ws';
-import { PlayersDB } from '../models/playersDb';
+import { PlayersDB } from '../db/playersDb';
 import { Player } from '../models/player';
 
 
@@ -8,7 +8,7 @@ export class PlayerController {
 
     registerPlayer(ws: WebSocket, req: any) {
       try {  
-        const data = typeof req.data === 'string' ? JSON.parse(req.data) : req.data;
+        const data = typeof req.data === "string" ? JSON.parse(req.data) : req.data;
         const { name, password } = data;
         if (this.playersDb.getPlayer(name)) {
             if (this.playersDb.validatePlayer(name, password)) {
@@ -16,35 +16,40 @@ export class PlayerController {
               ws.send(
                 JSON.stringify({
                   type: 'reg',
-                  data: JSON.stringify({ name, index, error: false, errorText: '' }),
+                  data: JSON.stringify({ name, index, error: false, errorText: "" }),
                   id: 0,
                 }),
               );
+              return this.playersDb.getPlayer(name);
             } else {
             const index = this.playersDb.getPlayerIndex(name);
               ws.send(
                 JSON.stringify({
                   type: 'reg',
-                  data: JSON.stringify({ name, index, error: true, errorText: 'User has already been registered' }),
+                  data: JSON.stringify({ name, index, error: true, errorText: `User has already been registered` }),
                   id: 0,
                 }),
               );
             }
           } else {
-            this.playersDb.addPlayer(name, password);
-            const index = this.playersDb.getPlayerIndex(name);
+            const player = this.playersDb.addPlayer(name, password);
+            player.index = this.playersDb.getNextAvailableIndex();
+            const index = player.getIndex();
             ws.send(
               JSON.stringify({
                 type: 'reg',
-                data: JSON.stringify({ name, index, error: false, errorText: '' }),
+                data: JSON.stringify({ name, index, error: false, errorText: "" }),
                 id: 0,
               }),
             );
             console.log(`User ${name} has been registered`);
+            console.log(this.playersDb)
+            return player;
           }
       } catch(error) {
-        console.error('Failed to register or login player:', error);
+        console.error(`Failed to register or login player:`, error);
       }
+
     }
 
     updateWins(ws: WebSocket, req: any) {
@@ -64,9 +69,9 @@ export class PlayerController {
             id: 0
           }
         ));
-
+        console.log(`Wins of ${playerName} were updated.`)  
       } catch (error) {
-          console.error('Failed to update player wins:', error);
+          console.error(`Failed to update player wins:`, error);
       }
   }
 
