@@ -1,18 +1,17 @@
 import { WebSocket } from 'ws';
-import { PlayersDB } from '../db/playersDb';
+import playersDb from '../db/playersDb';
 import { Player } from '../models/player';
 
 
 export class PlayerController {
-    private playersDb: PlayersDB = new PlayersDB();
 
     registerPlayer(ws: WebSocket, req: any) {
       try {  
         const data = typeof req.data === "string" ? JSON.parse(req.data) : req.data;
         const { name, password } = data;
-        if (this.playersDb.getPlayer(name)) {
-            if (this.playersDb.validatePlayer(name, password)) {
-            const index = this.playersDb.getPlayerIndex(name);
+        if (playersDb.getPlayer(name)) {
+            if (playersDb.validatePlayer(name, password)) {
+            const index = playersDb.getPlayerIndex(name);
               ws.send(
                 JSON.stringify({
                   type: 'reg',
@@ -20,9 +19,9 @@ export class PlayerController {
                   id: 0,
                 }),
               );
-              return this.playersDb.getPlayer(name);
+              return playersDb.getPlayer(name);
             } else {
-            const index = this.playersDb.getPlayerIndex(name);
+            const index = playersDb.getPlayerIndex(name);
               ws.send(
                 JSON.stringify({
                   type: 'reg',
@@ -32,8 +31,8 @@ export class PlayerController {
               );
             }
           } else {
-            const player = this.playersDb.addPlayer(name, password);
-            player.index = this.playersDb.getNextAvailableIndex();
+            const player = playersDb.addPlayer(name, password);
+            player.index = playersDb.getNextAvailableIndex();
             const index = player.getIndex();
             ws.send(
               JSON.stringify({
@@ -43,7 +42,7 @@ export class PlayerController {
               }),
             );
             console.log(`User ${name} has been registered`);
-            console.log(this.playersDb)
+            console.log(playersDb)
             return player;
           }
       } catch(error) {
@@ -56,9 +55,9 @@ export class PlayerController {
       try {
         const data = typeof req.data === 'string' ? JSON.parse(req.data) : req.data;
           const playerName: string = data.name;
-          const player: Player = this.playersDb.getPlayer(playerName);
+          const player: Player = playersDb.getPlayer(playerName);
           player.wins += 1;
-          this.playersDb.updatePlayer(player);
+          playersDb.updatePlayer(player);
           
           ws.send(JSON.stringify({
             type: 'update_winners',

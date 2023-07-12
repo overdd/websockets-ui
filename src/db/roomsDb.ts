@@ -1,28 +1,33 @@
 import { Room } from '../models/room';
+import { Player } from '../models/player';
 
-export class RoomsDB {
-    private rooms: Map<string, Room>;
+class RoomsDB {
+    public rooms: Map<number, Player[]>;
 
     constructor() {
         this.rooms = new Map();
     }
 
-    createRoom(room: Room, playerIndex: number, playerName: string): number {
-        room.addPlayer(playerIndex, playerName)
-        this.rooms[room.id] = room;
-        return room.id;
+    createRoom(player: Player): number {
+        const roomId = Math.floor(Math.random()*1000000);
+        const roomUsers = [player];
+        this.rooms.set(roomId, roomUsers);
+        return roomId;
     }
 
-    getRoom(roomId: number): Room | undefined {
-        return this.rooms[roomId];
+    getRoom(roomId: number): Player[] | undefined {
+        return this.rooms.get(roomId);
     }
 
-
-    deleteRoom(roomId: string): void {
-        delete this.rooms[roomId];
+    deleteRoom(roomId: number): void {
+        this.rooms.delete(roomId);
     }
 
-    getAllRooms(): Map<string, Room> {
+    getAllRooms(): Map<number, Player[]> {
         return this.rooms;
     }
 }
+
+const roomsDB = new RoomsDB();
+
+export default roomsDB;

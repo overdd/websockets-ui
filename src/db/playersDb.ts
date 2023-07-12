@@ -1,6 +1,6 @@
 import { Player } from '../models/player';
 
-export class PlayersDB {
+class PlayersDB {
     private players: Player[];
 
     constructor() {
@@ -19,6 +19,10 @@ export class PlayersDB {
 
     getPlayer(name: string): Player | undefined {
         return this.players.find(player => player.name === name);
+    }
+
+    getPlayerByIndex(index: number): Player | undefined {
+        return this.players.find(player => player.index === index);
     }
 
     validatePlayer(name: string, password: string): boolean {
@@ -44,3 +48,7 @@ export class PlayersDB {
         return this.players.length - 1;
     }
 }
+
+const playersDB = new PlayersDB();
+
+export default playersDB;

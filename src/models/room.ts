@@ -1,21 +1,22 @@
 import { Player } from "./player";
 
 export class Room {
-    public id: number;
-    public players: Map<number, string>;
+    public roomId: number;
+    public roomUsers: Player[];
   
-    constructor(id: number) {
-      this.id = id;
-      this.players = new Map();
+    constructor(roomId: number) {
+      this.roomId = roomId;
+      this.roomUsers = [];
     }
   
-    addPlayer(playerIndex: number, playerName: string) {
-      this.players.set(playerIndex, playerName);
+    addPlayer(player: Player) {
+      this.roomUsers.push(player);
     }
   
-    removePlayer(playerIndex: number) {
-      if (playerIndex !== -1) {
-        this.players.delete(playerIndex);
+    removePlayer(player: Player) {
+      const index = this.roomUsers.indexOf(player);
+      if (index !== -1) {
+        this.roomUsers.splice(index, 1);
       }
     }
   }
