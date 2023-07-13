@@ -1,31 +1,45 @@
-import { Room } from '../models/room';
-import { Player } from '../models/player';
+import { Room } from "../models/room";
+import { Player } from "../models/player";
+import playersDb from "../db/playersDb";
 
 class RoomsDB {
-    public rooms: Map<number, Player[]>;
+  public rooms: Map<number, Player[]>;
 
-    constructor() {
-        this.rooms = new Map();
-    }
+  constructor() {
+    this.rooms = new Map();
+  }
 
-    createRoom(player: Player): number {
-        const roomId = Math.floor(Math.random()*1000000);
-        const roomUsers = [player];
-        this.rooms.set(roomId, roomUsers);
-        return roomId;
-    }
+  createRoom(player: Player): number {
+    const roomId = Math.floor(Math.random() * 1000000);
+    const roomUsers = [player];
+    this.rooms.set(roomId, roomUsers);
+    return roomId;
+  }
 
-    getRoom(roomId: number): Player[] | undefined {
-        return this.rooms.get(roomId);
+  addPlayerToRoom(indexRoom: number, player: Player) {
+    const room = this.rooms.get(indexRoom);
+    if (room) {
+      const userName = player.name;
+      const isAdded = room.find((player) => player.index === player.getIndex());
+      if (isAdded || room.length >= 2) return false;
+      player.isTurn = false;
+      room.push(player);
+      return true;
     }
+    return false;
+  }
 
-    deleteRoom(roomId: number): void {
-        this.rooms.delete(roomId);
-    }
+  getRoom(roomId: number): Player[] | undefined {
+    return this.rooms.get(roomId);
+  }
 
-    getAllRooms(): Map<number, Player[]> {
-        return this.rooms;
-    }
+  deleteRoom(roomId: number): void {
+    this.rooms.delete(roomId);
+  }
+
+  getAllRooms(): Map<number, Player[]> {
+    return this.rooms;
+  }
 }
 
 const roomsDB = new RoomsDB();
