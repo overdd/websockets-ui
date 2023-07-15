@@ -51,14 +51,6 @@ export class RoomController {
       })
     );
 
-    ws.send(
-      JSON.stringify({
-        type: "create_game",
-        data: JSON.stringify(roomsList),
-        id: 0,
-      })
-    );
-
     return JSON.stringify({
       type: "create_game",
       data: JSON.stringify(roomsList),
