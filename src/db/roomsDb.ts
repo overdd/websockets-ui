@@ -29,17 +29,6 @@ class RoomsDB {
     return false;
   }
 
-  getRoom(roomId: number): Player[] | undefined {
-    return this.rooms.get(roomId);
-  }
-
-  deleteRoom(roomId: number): void {
-    this.rooms.delete(roomId);
-  }
-
-  getAllRooms(): Map<number, Player[]> {
-    return this.rooms;
-  }
 }
 
 const roomsDB = new RoomsDB();

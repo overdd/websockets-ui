@@ -5,7 +5,7 @@ import playersDb from "../db/playersDb";
 import { Player } from "../models/player";
 
 export class RoomController {
-  createRoom(ws: WebSocket, req: any, playerIndex: number, playerName: string) {
+  createRoom(ws: WebSocket, playerIndex: number, playerName: string) {
     const user = playersDb.getPlayerByIndex(playerIndex);
     const roomId = roomsDb.createRoom(user);
 

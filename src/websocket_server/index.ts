@@ -36,7 +36,7 @@ export class WebSocketServerClass {
                     this.playerController.updateWins(ws, req);
                     break;
                   case 'create_room':
-                    const createRoomData = this.roomController.createRoom(ws, req, currentPlayer.index, currentPlayer.name);
+                    const createRoomData = this.roomController.createRoom(ws, currentPlayer.index, currentPlayer.name);
                     this.wsServer.clients.forEach((socket: WebSocket) => socket.send(createRoomData));
                     break;
                   case 'add_user_to_room':
